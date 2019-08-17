@@ -14,7 +14,7 @@ export class Reel {
   private delayStop: number = 0;
   private container: PIXI.Container;
   private symbols: Symbol[];
-  private state: Symbol[];
+  private state: PIXI.Sprite[];  //sprite 
   private blur: PIXI.filters.BlurFilter;
   position:number = 0;
   previousPosition: number =0;
@@ -47,7 +47,7 @@ export class Reel {
       let symbolSprite = this.getSymbolSprite(random_symbol, i);
       
       this.container.addChild(symbolSprite);
-      this.state.push(random_symbol);
+      this.state.push(symbolSprite);  //todo add normal state logic ?
     }
   }
 
@@ -77,7 +77,6 @@ export class Reel {
   }
 
   updateBlurAndPosition() {
-    console.log('loh');
     this.blur.blurY = (this.position - this.previousPosition) * 8;
     this.previousPosition = this.position;
   }

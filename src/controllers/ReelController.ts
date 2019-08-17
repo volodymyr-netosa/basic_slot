@@ -7,9 +7,9 @@ import { Reel } from "./Reel.ts"
 export class ReelController {
   private margin: {top: number, left: number} = {top: 30, left: 50};
   private container: PIXI.Container;
-  private state: Reel[];
+  private state: Reel[] = [];
 
-  constructor(private loader: PIXI.Loader, public tweenTo: (...args:any)=>any) {
+  constructor(private loader: PIXI.Loader, public tweenController:any) {
     this.container = new PIXI.Container();
     this.initialize();
   }
@@ -17,7 +17,8 @@ export class ReelController {
   initialize() {
     this.createReels(REEL_COUNT);
     this.container.position.set(this.margin.left, this.margin.top);
-    // this.startSpin();
+    this.tweenController.reels = this.state;
+    this.startSpin();
   }
 
   createReels(reelCount: number) {
@@ -31,15 +32,15 @@ export class ReelController {
     }
   }
 
-  // startSpin() {
-  //   for (let i = 0; i < 3; i++) {
-  //     const r = this.state[i];
-  //     const extra = Math.floor(Math.random() * 3);
-  //     const target = r.position + 10 + i * 5 + extra;
-  //     const time = 2500 + i * 600 + extra * 600;
-  //     this.tweenTo(r, 'position', target, time, 0.5, null, i === this.state.length - 1 ? ()=>console.log("LUL") : null);
-  //   }
-  // }
+  startSpin() {
+    for (let i = 0; i < 3; i++) {
+      const r = this.state[i];
+      const extra = Math.floor(Math.random() * 3);
+      const target = r.position + 10 + i * 5 + extra;
+      const time = 2500 + i * 600 + extra * 600;
+      this.tweenController.tweenTo(r, 'position', target, time, 0.5, null, i === this.state.length - 1 ? ()=>console.log("LUL") : null);
+    }
+  }
 
 
   getContainer() {

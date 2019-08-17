@@ -54,7 +54,7 @@ export class Game {
   private initializeReels() {
     let reelController = new ReelController(
       this.loader,
-      this.tweenController.tweenTo.bind(this.tweenController)
+      this.tweenController
     );
     this.app.stage.addChild(reelController.getContainer());
   }

@@ -18,12 +18,20 @@ interface Tween {
 
 export class TweenController {
   private tweening: Tween[] = [];
-  private reels: Reel[] = [];
+  private _reels: Reel[] = [];
   private addHandlerToTicker: (func: (delta: number) => any) => void;
 
   constructor(addHandlerToTicker: (func: (delta: number) => any) => void) {
     this.addHandlerToTicker = addHandlerToTicker;
-    //this.initialize();
+    this.initialize();
+  }
+
+  get reels() {
+    return this._reels;
+  }
+
+  set reels(value: Reel[]) {
+    this._reels = value;
   }
 
   tweenTo(reelObject, property, target, time, backout_amount, onchange, oncomplete) {
@@ -71,7 +79,7 @@ export class TweenController {
           r.updateBlurAndPosition();
           let symbols = r.getSymbolState();
           for (let j = 0; j < symbols.length; j++) {
-              const symbolSprite:any = symbols[j].texture;
+              const symbolSprite = symbols[j];
               const prevy = symbolSprite.y;
               symbolSprite.y = ((r.getPosition() + j) % symbols.length) * SYMBOL_SIZE - SYMBOL_SIZE;
               if (symbolSprite.y < 0 && prevy > SYMBOL_SIZE) {
