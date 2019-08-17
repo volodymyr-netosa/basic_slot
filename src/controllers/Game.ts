@@ -5,6 +5,8 @@ import { RESOLUTION_CONFIG, ASSETS_URL } from "./config.ts";
 import { ReelController } from "./ReelController.ts";
 // @ts-ignore
 import { Button } from "./Button.ts";
+// @ts-ignore
+import { TweenController } from "./TweenController.ts";
 
 const REEL_COUNT = 3;
 const SYMBOL_COUNT = 3;
@@ -14,13 +16,22 @@ export class Game {
   private loader: PIXI.Loader;
   private resolution: {x: number, y: number};
   private container : PIXI.Container;
+  private tweenController: TweenController;
 
   constructor() {
     this.app = new PIXI.Application({...RESOLUTION_CONFIG});
     this.container = new PIXI.Container();
     this.loader = new PIXI.Loader();
-
+    //this.tweenController = new TweenController(this.addEventToTicker.bind(this));
     this.initialize();
+  }
+
+  addEventToTicker(func: (delta: any) => void) {
+    this.app.ticker.add(func);
+  }
+
+  initialize() {
+    this.loadImages();
   }
 
   setBackground = (bgImage: PIXI.Sprite) => {
@@ -40,13 +51,10 @@ export class Game {
     this.app.renderer.resize(parent.clientWidth, parent.clientHeight);
   }
 
-  private initializeReels(
-    slotTextures: PIXI.Texture[],
-    reelCount: number,
-    symbolCount: number
-  ) {
+  private initializeReels() {
     let reelController = new ReelController(
-      slotTextures, reelCount, symbolCount
+      this.loader,
+     // this.tweenController.tweenTo.bind(this.tweenController)
     );
     this.app.stage.addChild(reelController.getContainer());
   }
@@ -57,20 +65,13 @@ export class Game {
     )
     this.setBackground(bgImage);
 
-    const slotTextures = [3,4,5,6,7].map((i) => 
-      PIXI.Texture.from(`assets/SYM${i}.png`)
-    );
-    this.initializeReels(slotTextures, REEL_COUNT, SYMBOL_COUNT)
+    this.initializeReels()
     this.initializeButtons();
   }
 
   private initializeButtons() {
     let button = new Button(()=>console.log("pressed"), this.loader);
     this.app.stage.addChild(button.getContainer());
-  }
-
-  private initialize() {
-    this.loadImages();
   }
 
   async fetchAssets() {

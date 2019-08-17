@@ -26,7 +26,6 @@ function setupViewport(viewport: HTMLElement) {
 function centerElement(element: HTMLElement) {
   let topOffset = (window.innerHeight - element.clientHeight)/2;
   let leftOffset = (window.innerWidth - element.clientWidth)/2;
-  console.log('resizing', topOffset, leftOffset);
   element.style.top = `${topOffset}px`;
   element.style.left = `${leftOffset}px`;
 }

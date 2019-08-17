@@ -1,47 +1,46 @@
 import * as PIXI from "pixi.js";
 // @ts-ignore 
-import { REEL_WIDTH, SYMBOL_SIZE } from "./config.ts"
+import { REEL_WIDTH, REEL_COUNT, SYMBOL_PER_REEL } from "./config.ts"
+// @ts-ignore 
+import { Reel } from "./Reel.ts"
 
 export class ReelController {
-  private reels = [];
+  private margin: {top: number, left: number} = {top: 30, left: 50};
   private container: PIXI.Container;
+  private state: Reel[];
 
-  constructor(
-    slotTextures: PIXI.Texture[], 
-    reelCount:number,
-    symbolCount: number
-  ) {
+  constructor(private loader: PIXI.Loader/*, public tweenTo: (...args:any)=>any*/) {
     this.container = new PIXI.Container();
-    for (let i=0; i<reelCount; i++) {
-      const rc = new PIXI.Container();
-      rc.x = i * REEL_WIDTH;
-      this.container.addChild(rc);
+    this.initialize();
+  }
 
-      const reel = {
-        container: rc,
-        symbols: [],
-        position: 0,
-        previousPosition: 0,
-        blur: new PIXI.filters.BlurFilter()
-      };
-      reel.blur.blurX = 0;
-      reel.blur.blurY = 0;
-      rc.filters = [reel.blur];
-      for (let j=0; j<symbolCount; j++) {
-        const symbol = new PIXI.Sprite(
-          slotTextures[Math.floor(Math.random() * slotTextures.length)]
-        );
-        symbol.y = j * SYMBOL_SIZE;
-        symbol.scale.x = symbol.scale.y = Math.min(SYMBOL_SIZE / symbol.width, SYMBOL_SIZE / symbol.height);
-        symbol.x = Math.round((REEL_WIDTH - SYMBOL_SIZE) / 2);
-        reel.symbols.push(symbol);
-        rc.addChild(symbol);
-      }
-      
-      this.container.y = 50;
-      this.container.x = 60;
+  initialize() {
+    this.createReels(REEL_COUNT);
+    this.container.position.set(this.margin.left, this.margin.top);
+    // this.startSpin();
+  }
+
+  createReels(reelCount: number) {
+    this.state = [];
+    for (let i=0; i < reelCount; i++) {
+      let reel = new Reel(this.loader, SYMBOL_PER_REEL);
+      let reelContainer = reel.getContainer();
+      reelContainer.x = i * REEL_WIDTH;
+      this.state.push(reel);
+      this.container.addChild(reelContainer);
     }
   }
+
+  // startSpin() {
+  //   for (let i = 0; i < 3; i++) {
+  //     const r = this.state[i];
+  //     const extra = Math.floor(Math.random() * 3);
+  //     const target = r.position + 10 + i * 5 + extra;
+  //     const time = 2500 + i * 600 + extra * 600;
+  //     this.tweenTo(r, 'position', target, time, 0.5, null, i === this.state.length - 1 ? ()=>console.log("LUL") : null);
+  //   }
+  // }
+
 
   getContainer() {
     return this.container;

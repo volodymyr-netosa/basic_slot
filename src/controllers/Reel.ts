@@ -1,21 +1,31 @@
+import * as PIXI from "pixi.js";
+// @ts-ignore 
+import { REEL_WIDTH } from "./config.ts"
+
 interface Symbol {
   id: number,
   texture: PIXI.Texture
 }
 
 export class Reel {
-  private reelWidth: number = 230;
   private maxSymbolHeight: number = 180;
   private maxSymbolWidth: number = 180;
   private animation: boolean = true;
-  private position: {x: number, y: number} = { x: 0, y: 0}
   private delayStop: number = 0;
   private container: PIXI.Container;
   private symbols: Symbol[];
   private state: Symbol[];
+  private blur: PIXI.filters.BlurFilter;
+  position:number = 0;
+  previousPosition: number =0;
 
   constructor(private loader: PIXI.Loader, public symbolCount: number) {
+    this.blur = new PIXI.filters.BlurFilter();
+    this.blur.blurX = 0;
+    this.blur.blurY = 0;
+
     this.container = new PIXI.Container();
+    this.container.filters = [this.blur];
     this.initialize();
   }
   
@@ -27,6 +37,7 @@ export class Reel {
           texture: this.loader.resources[`assets/SYM${val}.png`].texture
         }
     ));
+    this.createReel();
   }
 
   createReel() {
@@ -47,26 +58,46 @@ export class Reel {
       this.maxSymbolHeight/symbolSprite.height,
       this.maxSymbolWidth/symbolSprite.width
     );
-    symbolSprite.x = (this.reelWidth - this.maxSymbolWidth)/2;
+    symbolSprite.x = (REEL_WIDTH - this.maxSymbolWidth)/2;
     return symbolSprite;
   }
 
-  getRandomSymbol(): Symbol {
+  getRandomSymbol(): Symbol {  //static?
     return this.symbols[Math.floor(Math.random() * this.symbols.length)];
+  }
+  
+  getRandomSprite(): any { //static?
+    return this.getRandomSymbol();
   }
 
   startAnimation() {
+    if (this.animation) return;
+    this.animation = true;
+    
+  }
 
+  updateBlurAndPosition() {
+    console.log('loh');
+    this.blur.blurY = (this.position - this.previousPosition) * 8;
+    this.previousPosition = this.position;
+  }
+
+  getSymbolState() {
+    return this.state;
+  }
+
+  getPosition() {
+    return this.position;
   }
 
   stopAnimation() {
-
+    this.animation = false;
   }
 
   getContainer() {
     return this.container;
   }
 
-  getResult() {
+  getBlurFilter() {
   }
 }
