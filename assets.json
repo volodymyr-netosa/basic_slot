@@ -1,0 +1,13 @@
+{
+  "files": {
+    "SYM1": "assets/SYM1.png",
+    "SYM3": "assets/SYM3.png",
+    "SYM4": "assets/SYM4.png",
+    "SYM5": "assets/SYM5.png",
+    "SYM6": "assets/SYM6.png",
+    "SYM7": "assets/SYM7.png",
+    "background": "assets/BG.png",
+    "spinButton": "assets/BTN_Spin.png",
+    "spinButtonDisabled": "assets/BTN_Spin_d.png"
+  }
+}

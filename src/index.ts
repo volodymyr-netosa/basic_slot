@@ -1,33 +1,24 @@
-import * as PIXI from 'pixi.js';
+import * as PIXI from "pixi.js";
+import "./public/style.css";
+// @ts-ignore
+import { ASSETS_URL } from "./config.ts";
 
-// The application will create a renderer using WebGL, if possible,
-// with a fallback to a canvas render. It will also setup the ticker
-// and the root stage PIXI.Container
 const app = new PIXI.Application();
+renderCanvas(app);
 
-// The application will create a canvas element for you that you
-// can then insert into the DOM
-document.body.appendChild(app.view);
+function setupFullScreenPixi(app: PIXI.Application) {
+  app.renderer.resize(window.innerWidth, window.innerHeight);
+  app.renderer.autoDensity = true;
+}
 
-// load the texture we need
-app.loader.add('bunny', 'assets/bunny.png').load((loader, resources) => {
-    // This creates a texture from a 'bunny.png' image
-    const bunny = new PIXI.Sprite(resources.bunny.texture);
+function renderCanvas(app: PIXI.Application) {
+  app.renderer.backgroundColor = 0x061639;
+  setupFullScreenPixi(app);
+  document.getElementById('gameElements').appendChild(app.view);
+}
 
-    // Setup the position of the bunny
-    bunny.x = app.renderer.width / 2;
-    bunny.y = app.renderer.height / 2;
-
-    // Rotate around the center
-    bunny.anchor.x = 0.5;
-    bunny.anchor.y = 0.5;
-
-    // Add the bunny to the scene we are building
-    app.stage.addChild(bunny);
-
-    // Listen for frame updates
-    app.ticker.add(() => {
-         // each frame we spin the bunny around a bit
-        bunny.rotation += 0.01;
-    });
-});
+async function fetchAssets() {
+  const response = await fetch(ASSETS_URL);
+  let data = await response.json();
+  return data; 
+}

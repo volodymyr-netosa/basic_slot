@@ -1,9 +1,11 @@
 const path = require('path');
-const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const serverConfig = {
+  mode: 'none',
   entry: './src/server.ts',                
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -26,11 +28,14 @@ const serverConfig = {
   externals: [nodeExternals()]
 };
  
-const frontConfig = {
-  entry: './src/index.ts',
+const webConfig = {
+  mode: 'none',
+  entry: {
+    game: './src/index.ts'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'main.js'
+    filename: '[name].bundle.js'
   },
   module: {
     rules: [
@@ -41,6 +46,17 @@ const frontConfig = {
       {
         test: /\.html$/,
         use: [{loader: "html-loader"}]
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ['file-loader']
       }
     ]
   },
@@ -48,8 +64,20 @@ const frontConfig = {
     new HtmlWebpackPlugin({
       template: "./src/views/index.html",
       filename: "./public/index.html",
-      // excludeChunks: [ 'server' ]
-    })
+      favicon: "./src/public/assets/icon.ico",
+      chunks: []
+    }),
+    new HtmlWebpackPlugin({
+      template: "./src/views/game.html",
+      filename: "./public/game.html",
+      favicon: "./src/public/assets/icon.ico",
+      chunks: ["game"]
+    }),
+    new CleanWebpackPlugin({cleanOnceBeforeBuildPatterns: []}),
+    new CopyPlugin([
+      { from: 'src/public/assets', to: 'assets' },
+    ])
   ],
+  watch: true,
 }
-module.exports = [serverConfig, frontConfig]
+module.exports = [serverConfig, webConfig]
