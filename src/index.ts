@@ -1,4 +1,3 @@
-import * as PIXI from "pixi.js";
 import "./public/style.css";
 // @ts-ignore
 import { RESOLUTION_CONFIG } from "./controllers/config.ts";

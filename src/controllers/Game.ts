@@ -5,6 +5,7 @@ import { RESOLUTION_CONFIG, ASSETS_URL } from "./config.ts";
 import { ReelController } from "./ReelController.ts";
 // @ts-ignore
 import { Button } from "./Button.ts";
+
 const REEL_COUNT = 3;
 const SYMBOL_COUNT = 3;
 
@@ -15,10 +16,8 @@ export class Game {
   private container : PIXI.Container;
 
   constructor() {
+    this.app = new PIXI.Application({...RESOLUTION_CONFIG});
     this.container = new PIXI.Container();
-    this.app = new PIXI.Application({
-      ...RESOLUTION_CONFIG
-    });
     this.loader = new PIXI.Loader();
 
     this.initialize();

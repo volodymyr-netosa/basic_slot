@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+// @ts-ignore
 
 export class Button {
   private container: PIXI.Container;
