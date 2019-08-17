@@ -35,6 +35,7 @@ const webConfig = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '',
     filename: '[name].bundle.js'
   },
   module: {
@@ -73,7 +74,6 @@ const webConfig = {
       favicon: "./src/public/assets/icon.ico",
       chunks: ["game"]
     }),
-    new CleanWebpackPlugin({cleanOnceBeforeBuildPatterns: []}),
     new CopyPlugin([
       { from: 'src/public/assets', to: 'assets' },
     ])

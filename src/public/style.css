@@ -1,4 +1,10 @@
 body {
-  background-color: red;
+  background-color: black;
   margin:0 auto;
+}
+#viewport {
+  position: relative;
+}
+#gameElements {
+  display: flex;
 }
