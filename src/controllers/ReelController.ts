@@ -9,7 +9,7 @@ export class ReelController {
   private container: PIXI.Container;
   private state: Reel[];
 
-  constructor(private loader: PIXI.Loader/*, public tweenTo: (...args:any)=>any*/) {
+  constructor(private loader: PIXI.Loader, public tweenTo: (...args:any)=>any) {
     this.container = new PIXI.Container();
     this.initialize();
   }

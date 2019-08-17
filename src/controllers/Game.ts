@@ -22,7 +22,7 @@ export class Game {
     this.app = new PIXI.Application({...RESOLUTION_CONFIG});
     this.container = new PIXI.Container();
     this.loader = new PIXI.Loader();
-    //this.tweenController = new TweenController(this.addEventToTicker.bind(this));
+    this.tweenController = new TweenController(this.addEventToTicker.bind(this));
     this.initialize();
   }
 
@@ -54,7 +54,7 @@ export class Game {
   private initializeReels() {
     let reelController = new ReelController(
       this.loader,
-     // this.tweenController.tweenTo.bind(this.tweenController)
+      this.tweenController.tweenTo.bind(this.tweenController)
     );
     this.app.stage.addChild(reelController.getContainer());
   }
