@@ -13,7 +13,7 @@ export class Bank {
   }
 
   initialize() {
-    let value = this.getFromLocalStorage();
+    let value = this.getFromLocalStorage() || {};
     this.amount = value.amount || 100;
     this.bet = value.bet || 5;
     this.createUI();
