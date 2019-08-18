@@ -83,10 +83,6 @@ export class TweenController<T extends TweenControlled> {
     return false;
   }
 
-  moveObject(obj: T) {
-    
-  }
-
   initialize() {
     this.addHandlerToTicker((delta) => {
       const now = Date.now();

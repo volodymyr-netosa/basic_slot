@@ -123,6 +123,7 @@ export class Reel implements TweenControlled {
     let visibleSymbols = this.state.filter(symbol => symbol.row != 0)
       .sort((a,b) => a.row - b.row) 
       .map(symbol => symbol.texture_id);
+    console.log('visible', visibleSymbols);
     return visibleSymbols
   }
 

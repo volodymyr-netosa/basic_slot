@@ -4,7 +4,32 @@ body {
 }
 #viewport {
   position: relative;
+  z-index: 1;
 }
 #gameElements {
   display: flex;
+}
+
+#loader-bar {
+  margin:0 auto;
+  width: 400px;
+  height: 10px;
+  background-color: #3a3a3a;
+}
+
+#loader-bar-progress {
+  width: 0;
+  height: 100%;
+  background-color: #78be20;
+  transition: width .6s linear;
+}
+
+#loader {
+  text-align: center;
+  position: relative;
+  color: white;
+  z-index: 10;
+}
+#loader.h1 {
+  font-family: sans-serif
 }

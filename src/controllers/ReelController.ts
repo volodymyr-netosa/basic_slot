@@ -76,7 +76,7 @@ export class ReelController {
     //pls dont look at this solution, it just works, i promise :(
     let wild_id = 0;
     let symbolIds = this.state.map(reel => reel.getReelValues());
-
+  
     let winMask = symbolIds.slice().reduce((winMask, column, index) => {
       column.forEach((symbol_id: number, index: number) => {
         if (winMask[index] == wild_id) winMask[index] = symbol_id;
@@ -97,6 +97,7 @@ export class ReelController {
           0 (full row of wild symbols) and not -1 (losing row)
       3) Process next column, etc
     */
+    console.log(winMask);
     return winMask.some((id:number)=>id>0);
   }
 
