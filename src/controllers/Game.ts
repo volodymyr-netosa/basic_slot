@@ -22,7 +22,8 @@ export class Game {
   private tweenController: TweenController<Reel>;
   private reelController: ReelController;
   private button: Button;
-  private winningScreenDisplay: boolean;
+  private winningScreenDisplay: boolean = false;
+  private noMoneyScreenDisplay: boolean = false;
   private bank: Bank;
 
   constructor() {
@@ -42,7 +43,7 @@ export class Game {
     this.app.stage.on('click', this.onClick.bind(this));
   }
 
-  onClick() {
+  onClick() { //make more flexible
     if (this.winningScreenDisplay) {
       this.winningScreenDisplay = false;
       this.app.stage.getChildByName('winningText').visible = false;
@@ -50,11 +51,19 @@ export class Game {
   }
 
   initializeWinningScreen() {
-    let winningText = this.generateWinningText();
-    let winningTextContainer = this.generateTextContainer(winningText);
+    let text = this.generateWinningText();
+    let winningTextContainer = this.generateTextContainer(text);
     winningTextContainer.name = 'winningText';
     winningTextContainer.visible = false;
     this.app.stage.addChild(winningTextContainer);
+  }
+  
+  initializeNoMoneyScreen() {
+    let text = this.generateNoMoneyText();
+    let noMoneyTextContainer = this.generateTextContainer(text);
+    noMoneyTextContainer.name = 'noMoneyText';
+    noMoneyTextContainer.visible = false;
+    this.app.stage.addChild(noMoneyTextContainer);
   }
 
   generateWinningText(): PIXI.Text {
@@ -71,6 +80,23 @@ export class Game {
       dropShadowDistance: 6,
     });
     let message = new PIXI.Text('YOU WON!', style);
+    return message;
+  }
+
+  generateNoMoneyText(): PIXI.Text {
+    let style = new PIXI.TextStyle({
+      fontFamily: "Comic Sans MS",
+      fontSize: 48,
+      fill: "yellow",
+      stroke: '#ff3300',
+      strokeThickness: 4,
+      dropShadow: true,
+      dropShadowColor: "#000000",
+      dropShadowBlur: 4,
+      dropShadowAngle: Math.PI / 6,
+      dropShadowDistance: 6,
+    });
+    let message = new PIXI.Text('NOT ENOUGH MONEY!', style);
     return message;
   }
 
@@ -130,24 +156,38 @@ export class Game {
     this.initializeReels()
     this.initializeButtons();
     this.initializeBank();
+    this.initializeNoMoneyScreen();
     this.initializeWinningScreen();
   }
 
+  private showTextScreen(
+    containerName: string, 
+    onTimeoutCloseCb: () => any, 
+    timeout: number = 3000
+  ) {
+    let container = this.app.stage.getChildByName(containerName);
+    container.visible = true;
+    console.log(container.visible);
+    setTimeout(() => {
+      container.visible = false;
+      onTimeoutCloseCb();
+    }, timeout)
+  }
+
   private onWin() {
-    let winningTextContainer = this.app.stage.getChildByName('winningText');
-    winningTextContainer.visible = true;
     this.winningScreenDisplay = true;
     this.bank.winHandler();
-    setTimeout(()=> {
-      this.winningScreenDisplay = false;
-      winningTextContainer.visible = false
-    }, 3000);
+    this.showTextScreen('winningText', () => this.winningScreenDisplay = false);
   }
 
   private onStartButtonClick() {
     let enoughMoney = this.bank.makeBet();
     if (enoughMoney) {
       this.reelController.startSpin();
+    }
+    else  {
+      this.noMoneyScreenDisplay = true;
+      this.showTextScreen('noMoneyText', () => this.noMoneyScreenDisplay = false, 1000);
     }
   }
 
