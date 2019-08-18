@@ -186,7 +186,7 @@ export class Game {
     }
     else  {
       this.noMoneyScreenDisplay = true;
-      this.showTextScreen('noMoneyText', () => this.noMoneyScreenDisplay = false, 5000);
+      this.showTextScreen('noMoneyText', () => this.noMoneyScreenDisplay = false, 1000);
     }
   }
 
