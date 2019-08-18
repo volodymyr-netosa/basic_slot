@@ -1,10 +1,9 @@
 ## Description
-Slot machine game. [Live demo](http://178.157.91.109:8080/game)  
-
-<img src='https://is.gd/HFilGl' width="600">  
-In case you want to run this on local machine:  
-`npm run build & npm start` in project folder  
-then go to http://localhost:8080/game/ in browser.  
+Slot machine game. [Live demo](http://178.157.91.109:8080/game) 
+<br>
+<img src="https://is.gd/HFilGl" widht="600">
+<br>
+In case you want to run this on local machine: `npm run build & npm start` and go to http://localhost:8080/game page.  
 
 In theory index http://localhost:8080 page should contain iframe of game page, but it isn't done yet.  
 ### Loading
