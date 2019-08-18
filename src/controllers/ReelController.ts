@@ -13,6 +13,7 @@ export class ReelController {
   constructor(
     private loader: PIXI.Loader, 
     public tweenController:any,
+    private onWinCb: ()=>void
   ) {
     this.container = new PIXI.Container();
     this.initialize();
@@ -42,8 +43,10 @@ export class ReelController {
   }
 
   onSpinEnd() {
+    this.state.forEach((reel)=>reel.onSpinEnd());
     this.toggleButton();
-    this.checkWin();
+    let win = this.checkWin();
+    if (win) this.onWinCb();
   }
 
   startSpin() {
@@ -55,6 +58,7 @@ export class ReelController {
       const time = 2500 + i * 600 + extra * 600;
       this.tweenController.tweenTo(
         reel,
+        reel.position.current,
         targetPosition,
         time,
         0.5,
@@ -69,9 +73,10 @@ export class ReelController {
   }
   
   checkWin(): boolean {
+    //pls dont look at this solution, it just works, i promise :(
     let wild_id = 0;
     let symbolIds = this.state.map(reel => reel.getReelValues());
-    console.log(symbolIds);
+
     let winMask = symbolIds.slice().reduce((winMask, column, index) => {
       column.forEach((symbol_id: number, index: number) => {
         if (winMask[index] == wild_id) winMask[index] = symbol_id;
@@ -79,9 +84,20 @@ export class ReelController {
       })
       return winMask;
     });
-    let win = winMask.some((id:number)=>~id);
-    console.log(winMask);
-    return win;
+    /* winMask algorythm:
+      1) Took first reel column as initial value
+      2) Compare next column value with winMask per row
+        - if symbol id in winMask is 0 (wild symbol id), that means that
+          every reel before contains wild symbol on this row
+        - if symbol in next column on this row is different from 
+          winMask symbol and not 0 (wild), that means that it's losing row and 
+          thats why i'm setting winMask value to -1
+        - after processing all columns, i recieve specil mask array, that 
+          indicates if there is winning row if it contains elements, that are not
+          0 (full row of wild symbols) and not -1 (losing row)
+      3) Process next column, etc
+    */
+    return winMask.some((id:number)=>id>0);
   }
 
   getContainer() {

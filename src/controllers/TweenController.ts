@@ -5,6 +5,7 @@ import { REEL_WIDTH, REEL_COUNT, SYMBOL_SIZE } from "./config.ts"
 
 interface Tween<T extends TweenControlled> {
   object: T,
+  startPostition: number,
   targetPosition: number,
   easing: (t:number) => number,
   spinTime: number,
@@ -36,6 +37,7 @@ export class TweenController<T extends TweenControlled> {
 
   tweenTo(
     object: T,
+    startPostition: number,
     targetPosition: number,
     spinTime: number, 
     backout_amount: number, 
@@ -44,6 +46,7 @@ export class TweenController<T extends TweenControlled> {
   ) {
     const tween: Tween<T> = {
       object,
+      startPostition,
       targetPosition,
       easing: this.backout(backout_amount),
       spinTime,
@@ -73,7 +76,7 @@ export class TweenController<T extends TweenControlled> {
       return true;
     }
     t.object.position.current = this.lerp(
-      0,
+      t.startPostition,
       t.targetPosition,
       t.easing(phase)
     );

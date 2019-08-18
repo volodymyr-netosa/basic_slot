@@ -55,8 +55,8 @@ export class Game {
   generateWinningTextContainer(): PIXI.Container {
     let container = new PIXI.Container();
     let style = new PIXI.TextStyle({
-      fontFamily: "Arial",
-      fontSize: 120,
+      fontFamily: "Comic Sans MS",
+      fontSize: 100,
       fill: "yellow",
       stroke: '#ff3300',
       strokeThickness: 4,
@@ -66,9 +66,9 @@ export class Game {
       dropShadowAngle: Math.PI / 6,
       dropShadowDistance: 6,
     });
-    let message = new PIXI.Text('YOU WIN!', style);
+    let message = new PIXI.Text('YOU WON!', style);
     let background = new PIXI.Graphics();
-    background.beginFill(0x217333);
+    background.beginFill(0x0E4954);
     background.drawRect(60,30,730,490);
     background.endFill();
     background.alpha=0.9;
@@ -102,6 +102,7 @@ export class Game {
     this.reelController = new ReelController(
       this.loader,
       this.tweenController,
+      this.onWin.bind(this)
     );
     this.app.stage.addChild(this.reelController.getContainer());
   }
@@ -114,10 +115,10 @@ export class Game {
 
     this.initializeReels()
     this.initializeButtons();
-    this.onWin();
   }
 
   private onWin() {
+    this.winningTextContainer.visible = true;
     this.app.stage.addChild(this.winningTextContainer);
     this.winningScreenDisplay = true;
     setTimeout(()=> {

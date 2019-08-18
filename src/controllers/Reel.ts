@@ -27,8 +27,10 @@ export class Reel implements TweenControlled {
   private textures: Texture[];
   private state: Symbol[];
   private blur: PIXI.filters.BlurFilter;
-  private _position: Position = { current:0, prev: 0 };
-
+  private _position: Position = { current:0, prev: 0 }; //this is position for spinning
+  private lastSpinPosition: number = 0;  
+  // and this is position for calculation row for symbols https://i.pinimg.com/236x/9e/50/b8/9e50b88236ffedc09fe3159df10344e3.jpg
+                                    
   constructor(private loader: PIXI.Loader, public symbolCount: number) {
     this.blur = new PIXI.filters.BlurFilter();
     this.blur.blurX = 0;
@@ -99,8 +101,12 @@ export class Reel implements TweenControlled {
     }
   }
 
-  spinStop() { 
-    
+  onSpinEnd() { 
+    let offset = (this.position.current - this.lastSpinPosition) % this.state.length;
+    this.state.map((symbol) => {
+      symbol.row = (symbol.row + offset) % this.state.length;
+    });
+    this.lastSpinPosition = this.position.current;
   }
 
   updateBlurAndPosition() {
@@ -113,20 +119,19 @@ export class Reel implements TweenControlled {
   }
 
   getReelValues() {
-    //pls dont look at this quirk, it just works, i promise :(
-    let offset = this.position.current % (this.state.length); //calculating offset
-    let hiddenElement = (this.state.length - offset) % this.state.length; 
-
-    let leftPart = this.state.slice(0, hiddenElement);
-    let rightPart = this.state.slice(hiddenElement+1);
-
-    let values = leftPart.concat(rightPart);
-    console.log(values);
-    return values.map(symbol => symbol.texture_id);
+    //remove top row, that uses only for animation
+    let visibleSymbols = this.state.filter(symbol => symbol.row != 0)
+      .sort((a,b) => a.row - b.row) 
+      .map(symbol => symbol.texture_id);
+    return visibleSymbols
   }
 
   get position(): Position {
     return this._position;
+  }
+
+  set position(value) {
+    this._position = value;
   }
 
   getContainer() {
