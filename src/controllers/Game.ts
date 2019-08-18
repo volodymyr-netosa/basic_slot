@@ -7,6 +7,8 @@ import { ReelController } from "./ReelController.ts";
 import { Button } from "./Button.ts";
 // @ts-ignore
 import { TweenController } from "./TweenController.ts";
+// @ts-ignore 
+import { Reel } from "./Reel.ts"
 
 const REEL_COUNT = 3;
 const SYMBOL_COUNT = 3;
@@ -16,7 +18,8 @@ export class Game {
   private loader: PIXI.Loader;
   private resolution: {x: number, y: number};
   private container : PIXI.Container;
-  private tweenController: TweenController;
+  private tweenController: TweenController<Reel>;
+  private reelController: ReelController;
 
   constructor() {
     this.app = new PIXI.Application({...RESOLUTION_CONFIG});
@@ -52,11 +55,11 @@ export class Game {
   }
 
   private initializeReels() {
-    let reelController = new ReelController(
+    this.reelController = new ReelController(
       this.loader,
       this.tweenController
     );
-    this.app.stage.addChild(reelController.getContainer());
+    this.app.stage.addChild(this.reelController.getContainer());
   }
 
   private onLoad() {
@@ -70,7 +73,7 @@ export class Game {
   }
 
   private initializeButtons() {
-    let button = new Button(()=>console.log("pressed"), this.loader);
+    let button = new Button(this.reelController.startSpin.bind(this.reelController), this.loader);
     this.app.stage.addChild(button.getContainer());
   }
 
