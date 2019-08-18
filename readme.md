@@ -1,15 +1,13 @@
 ## Description
 Slot machine game. [Live demo](http://178.157.91.109:8080/game)  
 
-
 <img src='https://is.gd/HFilGl' width="600">  
-<br>
 In case you want to run this on local machine:  
-`npm build & npm start` in project folder  
-then go to <localhost:8080/game> in browser.  
-<br>
-In theory index <localhost:8080> page should contain iframe of game page, but it isn't done yet.
-###Loading
+`npm run build & npm start` in project folder  
+then go to http://localhost:8080/game/ in browser.  
+
+In theory index http://localhost:8080 page should contain iframe of game page, but it isn't done yet.  
+### Loading
 Game starts with fetching json assets file from server
 and loading this images to PIXI.Loader, while displaying loading screen:  
 <img src='https://is.gd/StzFfK' width='400'>  
