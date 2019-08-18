@@ -14,10 +14,8 @@ export class Bank {
 
   initialize() {
     let value = this.getFromLocalStorage();
-    if (!value) {
-      this.amount = 100;
-      this.bet = 5;
-    }
+    this.amount = value.amount || 100;
+    this.bet = value.bet || 5;
     this.createUI();
   }
 
@@ -79,9 +77,10 @@ export class Bank {
   }
 
   renderBankAmount() {
+    //i thought that it's better to save on unload event, but google says that im wrong :c
+    this.saveToLocalStorage(); 
     (<PIXI.Text>this.container.getChildByName('bankInfo')).text = `Money: ${this.amount}`;
     (<PIXI.Text>this.container.getChildByName('winInfo')).text = `Win: ${this.lastWin}`;
-
   }
 
   saveToLocalStorage() {
