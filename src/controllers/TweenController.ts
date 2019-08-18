@@ -56,6 +56,13 @@ export class TweenController<T extends TweenControlled> {
     return tween;
   }
 
+  stopTweening(object: T) {
+    const index = this.tweening.findIndex((value)=> value.object === object);
+    if (~index) {
+      this.tweening[index].spinTime = 0;
+    }
+  }
+
   tweenObject(t: Tween<T>, now: number) {
     const phase = Math.min(1, (now - t.startTime)/t.spinTime);
 
@@ -65,15 +72,11 @@ export class TweenController<T extends TweenControlled> {
       if (t.complete) t.complete();
       return true;
     }
-    console.log('BEFORE', t.object.position);
-    console.log(phase);
-    console.log(t.targetPosition);
     t.object.position.current = this.lerp(
       0,
       t.targetPosition,
       t.easing(phase)
     );
-    console.log('AFTER', t.object.position);
     return false;
   }
 
@@ -90,7 +93,7 @@ export class TweenController<T extends TweenControlled> {
           if (done) remove.push(this.tweening[i]);
       };
       for (let i = 0; i < remove.length; i++) {
-        //this.tweening.splice(this.tweening.indexOf(remove[i]), 1);
+        this.tweening.splice(this.tweening.indexOf(remove[i]), 1);
       }
     });
 

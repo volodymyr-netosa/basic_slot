@@ -11,7 +11,8 @@ interface Texture {
 
 interface Symbol {
   texture_id: number,
-  sprite: PIXI.Sprite
+  sprite: PIXI.Sprite,
+  row: number
 }
 
 interface Position { 
@@ -22,13 +23,11 @@ interface Position {
 export class Reel implements TweenControlled {
   private maxSymbolHeight: number = 180;
   private maxSymbolWidth: number = 180;
-  private animation: boolean = true;
-  private delayStop: number = 0;
   private container: PIXI.Container;
   private textures: Texture[];
   private state: Symbol[];
   private blur: PIXI.filters.BlurFilter;
-  private _position: Position = { current:0, prev: 0};
+  private _position: Position = { current:0, prev: 0 };
 
   constructor(private loader: PIXI.Loader, public symbolCount: number) {
     this.blur = new PIXI.filters.BlurFilter();
@@ -56,18 +55,19 @@ export class Reel implements TweenControlled {
     for (let i = 0; i < this.symbolCount+1; i++){
       let randomTexture = this.getRandomTexture();
       let symbolSprite = this.prepareSymbolSprite(randomTexture, i);
-      
-      this.container.addChild(symbolSprite);
-      this.state.push({
+      const symbol = {
         texture_id: randomTexture.id,
-        sprite: symbolSprite
-      });
+        sprite: symbolSprite,
+        row: i
+      };
+      this.container.addChild(symbolSprite);
+      this.state.push(symbol);
     }
   }
 
   prepareSymbolSprite(texture: Texture, position: number): PIXI.Sprite {
     let symbolSprite = new PIXI.Sprite(texture.texture);
-    symbolSprite.y = position * this.maxSymbolHeight;
+    symbolSprite.y = (position - 1) * this.maxSymbolHeight; // -1 cause 1st element is hidden on top of screen
     symbolSprite.scale.x = symbolSprite.scale.y = Math.min(
       this.maxSymbolHeight/symbolSprite.height,
       this.maxSymbolWidth/symbolSprite.width
@@ -86,22 +86,21 @@ export class Reel implements TweenControlled {
     symbol.texture_id = randomTexture.id;
   }
 
-
-  startAnimation() {
-    if (this.animation) return;
-    this.animation = true;
-  }
-
   spin() {
     this.updateBlurAndPosition();
     for (let i=0; i < this.state.length; i++) {
       const sprite = this.state[i].sprite;
-      const prevPosition = sprite.y;
-      sprite.y = ((this.position.current + i) % this.state.length) * this.maxSymbolHeight - this.maxSymbolHeight+1;
-      if (sprite.y < 0 && prevPosition > this.maxSymbolHeight) {
+      const prev_y = sprite.y;
+      const position = (this.position.current + i) % this.state.length;
+      sprite.y = (position - 1) * this.maxSymbolHeight;
+      if (sprite.y < 0 && prev_y > this.maxSymbolHeight) {
         this.setRandomTextureToSymbol(this.state[i]);
       }
     }
+  }
+
+  spinStop() { 
+    
   }
 
   updateBlurAndPosition() {
@@ -113,18 +112,24 @@ export class Reel implements TweenControlled {
     return this.state.map(val => val.sprite);
   }
 
+  getReelValues() {
+    //pls dont look at this quirk, it just works, i promise :(
+    let offset = this.position.current % (this.state.length); //calculating offset
+    let hiddenElement = (this.state.length - offset) % this.state.length; 
+
+    let leftPart = this.state.slice(0, hiddenElement);
+    let rightPart = this.state.slice(hiddenElement+1);
+
+    let values = leftPart.concat(rightPart);
+    console.log(values);
+    return values.map(symbol => symbol.texture_id);
+  }
+
   get position(): Position {
     return this._position;
-  }
- 
-  stopAnimation() {
-    this.animation = false;
   }
 
   getContainer() {
     return this.container;
-  }
-
-  getBlurFilter() {
   }
 }

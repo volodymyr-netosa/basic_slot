@@ -9,6 +9,8 @@ import { Button } from "./Button.ts";
 import { TweenController } from "./TweenController.ts";
 // @ts-ignore 
 import { Reel } from "./Reel.ts"
+// @ts-ignore 
+import { Button } from "./Button";
 
 const REEL_COUNT = 3;
 const SYMBOL_COUNT = 3;
@@ -20,6 +22,9 @@ export class Game {
   private container : PIXI.Container;
   private tweenController: TweenController<Reel>;
   private reelController: ReelController;
+  private button: Button;
+  private winningScreenDisplay: boolean;
+  private winningTextContainer: PIXI.Container;
 
   constructor() {
     this.app = new PIXI.Application({...RESOLUTION_CONFIG});
@@ -35,6 +40,45 @@ export class Game {
 
   initialize() {
     this.loadImages();
+    this.winningTextContainer = this.generateWinningTextContainer();
+    this.app.stage.interactive = true;
+    this.app.stage.on('click', this.onClick.bind(this));
+  }
+
+  onClick() {
+    if (this.winningScreenDisplay) {
+      this.winningScreenDisplay = false;
+      this.winningTextContainer.visible = false;
+    }
+  }
+
+  generateWinningTextContainer(): PIXI.Container {
+    let container = new PIXI.Container();
+    let style = new PIXI.TextStyle({
+      fontFamily: "Arial",
+      fontSize: 120,
+      fill: "yellow",
+      stroke: '#ff3300',
+      strokeThickness: 4,
+      dropShadow: true,
+      dropShadowColor: "#000000",
+      dropShadowBlur: 4,
+      dropShadowAngle: Math.PI / 6,
+      dropShadowDistance: 6,
+    });
+    let message = new PIXI.Text('YOU WIN!', style);
+    let background = new PIXI.Graphics();
+    background.beginFill(0x217333);
+    background.drawRect(60,30,730,490);
+    background.endFill();
+    background.alpha=0.9;
+    message.position.set(
+      background.position.x + background.width/5,
+      background.position.y + background.height/3
+    )
+    container.addChild(background);
+    container.addChild(message);
+    return container;
   }
 
   setBackground = (bgImage: PIXI.Sprite) => {
@@ -57,7 +101,7 @@ export class Game {
   private initializeReels() {
     this.reelController = new ReelController(
       this.loader,
-      this.tweenController
+      this.tweenController,
     );
     this.app.stage.addChild(this.reelController.getContainer());
   }
@@ -70,11 +114,27 @@ export class Game {
 
     this.initializeReels()
     this.initializeButtons();
+    this.onWin();
+  }
+
+  private onWin() {
+    this.app.stage.addChild(this.winningTextContainer);
+    this.winningScreenDisplay = true;
+    setTimeout(()=> {
+      this.winningScreenDisplay = false;
+      this.winningTextContainer.visible = false
+    }, 3000);
   }
 
   private initializeButtons() {
-    let button = new Button(this.reelController.startSpin.bind(this.reelController), this.loader);
-    this.app.stage.addChild(button.getContainer());
+    this.button = new Button(
+      this.reelController.startSpin.bind(this.reelController), 
+      this.reelController.stopSpin.bind(this.reelController),
+      this.loader);
+    this.reelController.setToggleButtonCb(
+      this.button.toggleButton.bind(this.button)
+    );
+    this.app.stage.addChild(this.button.getContainer());
   }
 
   async fetchAssets() {

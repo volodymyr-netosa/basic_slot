@@ -6,15 +6,15 @@ export class Button {
   private active: boolean;
   private activeBtn: PIXI.Texture;
   private inactiveBtn: PIXI.Texture;
-  private onClickCb: () => void;
   private button: PIXI.Sprite;
-  private loader: PIXI.Loader;
 
-  constructor(onClickCb: () => void, loader: PIXI.Loader) {
+  constructor(
+    private onClickCb: () => void, 
+    private onDisabledClickCb: () => void, 
+    private loader: PIXI.Loader
+  ) {
     this.container = new PIXI.Container();
     this.active = true;
-    this.onClickCb = onClickCb;
-    this.loader = loader;
     this.initialize();
     this.button.on('click', this.onButtonClick.bind(this));
   }
@@ -36,13 +36,16 @@ export class Button {
   }
 
   private onButtonClick(): void {
-    if (!this.active) return;
-    this.toggleButton();
-    this.onClickCb();
-    setTimeout(()=>{this.toggleButton()}, 1000);
+    if (!this.active) {
+      this.onDisabledClickCb();
+    }
+    else {
+      this.onClickCb();
+      this.toggleButton();
+    }
   }
 
-  private toggleButton(): void {
+  toggleButton(): void {
     this.active = !this.active;
     this.button.texture = this.active? this.activeBtn : this.inactiveBtn;
   }
