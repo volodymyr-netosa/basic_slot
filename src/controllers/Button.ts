@@ -16,7 +16,7 @@ export class Button {
     this.container = new PIXI.Container();
     this.active = true;
     this.initialize();
-    this.button.on('click', this.onButtonClick.bind(this));
+    this.button.on('pointerdown', this.onButtonClick.bind(this));
   }
 
   private initialize(): void {

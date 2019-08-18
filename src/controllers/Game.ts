@@ -40,7 +40,7 @@ export class Game {
 
   initialize() {
     this.app.stage.interactive = true;
-    this.app.stage.on('click', this.onClick.bind(this));
+    this.app.stage.on('pointerdown', this.onClick.bind(this));
   }
 
   onClick() { //make more flexible
@@ -124,7 +124,6 @@ export class Game {
 
   renderCanvas(element: HTMLElement){ 
     if (this.app) element.appendChild(this.app.view) //todo: modify with event emitter?
-    let parent = <HTMLElement>this.app.view.parentElement;
     this.fillParentElement();
   }
 

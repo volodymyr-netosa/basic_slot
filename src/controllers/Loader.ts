@@ -33,6 +33,9 @@ export class Loader {
     let loaderDiv = document.createElement('div');
     loaderDiv.id = "loader";
 
+    let loaderInnerDiv = document.createElement('div');
+    loaderInnerDiv.id = 'loader-inner';
+
     let loadingText = document.createElement('h1');
     loadingText.innerText = "Its loading...";
 
@@ -43,8 +46,9 @@ export class Loader {
     this.barProgress.id = "loader-bar-progress";
 
     document.body.appendChild(loaderDiv);
-    loaderDiv.appendChild(loadingText);
-    loaderDiv.appendChild(loaderBarDiv);
+    loaderDiv.appendChild(loaderInnerDiv);
+    loaderInnerDiv.appendChild(loadingText);
+    loaderInnerDiv.appendChild(loaderBarDiv);
     loaderBarDiv.appendChild(this.barProgress);
   }
 
