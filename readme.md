@@ -23,7 +23,8 @@ To fix this you can refresh page and receive starting 100 coins. Money amount sa
 ### Resizing
 Game is resizing-friendly, so you can set arbitary resolution and play on laptops/mobiles, but due to assets and time limitations, portrait mobile layout seems not very good.   
 <img src='https://i.imgur.com/FVQPEQr.png' height='400'> 
-<img src='https://i.imgur.com/Pp8w4uH.png' width='400'>
+<img src='https://i.imgur.com/Pp8w4uH.png' width='400'><br>  
+<img src='https://media.giphy.com/media/eHXvYkxNdt5z6pFPeP/giphy.gif' widht='400'>
 
 ### Architecture
 Event-based architecture on my opinion is better solution, so the next developing step will be refactoring this multiple classes with callback injection to events.  
