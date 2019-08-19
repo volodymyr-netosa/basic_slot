@@ -16,7 +16,7 @@ This file list contains big image (~60 Mb) to make sure that loading works corre
 UI is pretty obvious. After pressing button, reels start to spin and stop after ~2.5 sec. This time can be skipped by pressing button second time (when it's "disabled").
 If there is winning row, winning screen appears (that can be skipped by clicking anywhere on canvas, but it anyway disappears after 3 sec).  
 <img src='https://i.imgur.com/mR8DeYS.png' width='400'>  
-If you are not lucky enough and reach out of money, next screen appears that disappears after 1 sec (i set bet to 200 before making this screen, so don't be fooled by money amount :) ) and wheel is disabled forever. 
+If you are not lucky enough and reach out of money, next screen appears that fade out after 1 sec (i set bet to 200 before making this screen, so don't be fooled by money amount on pic :) ) and button is disabled forever. 
 <img src='https://is.gd/ezx9OW' width='400'>  
 To fix this you can refresh page and receive starting 100 coins. Money amount saving to localStorage after every spin, so you can safely refresh page when you want (not including 0 coins exception) without losing coins.
 
