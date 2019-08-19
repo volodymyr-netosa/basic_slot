@@ -12,7 +12,7 @@ body {
 
 #loader-bar {
   margin:0 auto;
-  width: 400px;
+  width: 540px;
   height: 10px;
   background-color: #3a3a3a;
 }
@@ -37,9 +37,20 @@ body {
 }
 
 #loader-inner {
-  margin: auto;
+  margin: auto 0;
+  width: 100%;
 }
 
-#loader.h1 {
-  font-family: sans-serif
+#loader-inner > h1 {
+  font-size: 64px;
+  font-family: sans-serif;
+}
+
+@media screen and (max-width: 1080px) {
+  #loader-inner > h1  {
+    font-size: 6vw;
+  }
+  #loader-bar {
+    width:50%;
+  }
 }
